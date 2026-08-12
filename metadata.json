@@ -1,0 +1,8 @@
+{
+  "name": "Remix Padang Savana 3D",
+  "description": "Simulasi 3D Padang Savana bergaya cat air dengan objek modular, kontrol cuaca, siklus waktu, dan satwa liar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
