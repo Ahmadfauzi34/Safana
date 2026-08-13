@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
-import { WaterColorShader } from '../shaders/watercolorShader';
 import { SavannahConfig, TimePhase, WeatherConfig, WeatherPreset } from '../types/savannah';
 import { clamp, lerp, smoothstep, terrainH } from '../utils/noise';
 
@@ -109,8 +105,6 @@ export class SavannahScene {
   public scene: THREE.Scene;
   public camera: THREE.PerspectiveCamera;
   public controls: OrbitControls;
-  public composer: EffectComposer;
-  public wcPass: ShaderPass;
 
   // Lights
   public hemiLight: THREE.HemisphereLight;
@@ -271,24 +265,11 @@ export class SavannahScene {
     this.faunaSystemModule = new FaunaSystemModule();
     this.scene.add(this.faunaSystemModule.group);
 
-    // 7. Post Processing
-    this.composer = new EffectComposer(this.renderer);
-    this.composer.addPass(new RenderPass(this.scene, this.camera));
-    this.wcPass = new ShaderPass(WaterColorShader);
-    this.composer.addPass(this.wcPass);
-
-    const pr = this.renderer.getPixelRatio();
-    this.wcPass.uniforms.uResolution.value.set(
-      container.clientWidth * pr,
-      container.clientHeight * pr
-    );
-    this.wcPass.uniforms.uIntensity.value = this.config.watercolorIntensity;
-
-    // 8. Event Listeners
+    // 7. Event Listeners
     window.addEventListener('resize', this.onResize);
     this.renderer.domElement.addEventListener('pointerdown', this.onPointerDown);
 
-    // 9. Start Loop
+    // 8. Start Loop
     this.animate();
   }
 
@@ -424,13 +405,7 @@ export class SavannahScene {
     this.hemiLight.groundColor.copy(lightFrame.hg);
     this.hemiLight.intensity = lightFrame.hi * (1 - this.grayAmt * 0.25) + this.flash * 0.6;
 
-    // 4. Update Shader Pass Uniforms
-    this.wcPass.uniforms.uTime.value = elapsed;
-    this.wcPass.uniforms.uIntensity.value = this.config.watercolorIntensity;
-    this.wcPass.uniforms.uFlash.value = this.flash * 0.4;
-    this.wcPass.uniforms.uNight.value = nightFactor * 0.9;
-
-    // 5. Update Sub-modules
+    // 4. Update Sub-modules
     this.terrainModule.setWetness(this.wetAmt);
     this.waterModule.update(elapsed, this.rainAmt, dayFactor * (1 - this.grayAmt * 0.4), this._finalSky);
 
@@ -462,7 +437,7 @@ export class SavannahScene {
       this.config.activeAnimalId
     );
 
-    // 6. Camera Tweens
+    // 5. Camera Tweens
     if (this.tween) {
       this.tween.t += dt;
       let k = Math.min(1, this.tween.t / this.tween.dur);
@@ -476,11 +451,7 @@ export class SavannahScene {
     }
 
     this.controls.update();
-    if (this.config.watercolorIntensity > 0.01) {
-      this.composer.render();
-    } else {
-      this.renderer.render(this.scene, this.camera);
-    }
+    this.renderer.render(this.scene, this.camera);
   };
 
   /* ================= Camera Navigation ================= */
@@ -578,10 +549,6 @@ export class SavannahScene {
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(w, h);
-    this.composer.setSize(w, h);
-
-    const pr = this.renderer.getPixelRatio();
-    this.wcPass.uniforms.uResolution.value.set(w * pr, h * pr);
   };
 
   public dispose() {
@@ -597,7 +564,6 @@ export class SavannahScene {
     this.faunaSpotsModule.dispose();
     this.faunaSystemModule.dispose();
 
-    this.composer.dispose();
     this.renderer.dispose();
     this.container.innerHTML = '';
   }

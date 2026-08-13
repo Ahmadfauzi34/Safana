@@ -148,24 +148,8 @@ export const ModularInspector: React.FC<ModularInspectorProps> = ({
         {/* Global Shaders & Dynamics Parameters */}
         <div className="bg-[#f8efd8]/90 p-3.5 rounded-2xl border border-[#8c6437]/25 space-y-3">
           <h3 className="font-['Caveat'] font-bold text-xl text-[#4a3421] flex items-center gap-1.5">
-            <Sliders className="w-4 h-4 text-[#b8874a]" /> Parameter Cat Air &amp; Angin
+            <Sliders className="w-4 h-4 text-[#b8874a]" /> Parameter Global
           </h3>
-
-          <div>
-            <div className="flex justify-between text-xs font-extrabold text-[#5b4025] mb-1">
-              <span>Intensitas Kuas Cat Air</span>
-              <span className="text-[#b8874a]">{Math.round(config.watercolorIntensity * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="1.6"
-              step="0.05"
-              value={config.watercolorIntensity}
-              onChange={(e) => onUpdateConfig({ watercolorIntensity: parseFloat(e.target.value) })}
-              className="w-full accent-[#b8874a] cursor-pointer h-1.5 rounded-lg bg-[#e8d2b0]"
-            />
-          </div>
 
           <div>
             <div className="flex justify-between text-xs font-extrabold text-[#5b4025] mb-1">

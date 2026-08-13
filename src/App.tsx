@@ -31,7 +31,6 @@ const defaultConfig: SavannahConfig = {
     animalMarkers: true,
     faunaAgents: true,
   },
-  watercolorIntensity: 0.35,
   windSpeed: 1.0,
   timeOfDay: 7.0,
   isTimeRunning: true,
@@ -157,7 +156,6 @@ export default function App() {
   const handleResetAllLayers = () => {
     handleUpdateConfig({
       visibility: defaultConfig.visibility,
-      watercolorIntensity: 0.35,
       windSpeed: 1.0,
     });
   };

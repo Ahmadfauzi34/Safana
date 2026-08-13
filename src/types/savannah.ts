@@ -40,7 +40,6 @@ export interface ModularVisibility {
 
 export interface SavannahConfig {
   visibility: ModularVisibility;
-  watercolorIntensity: number;
   windSpeed: number;
   timeOfDay: number; // 0..24
   isTimeRunning: boolean;
